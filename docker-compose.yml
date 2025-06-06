@@ -1,0 +1,110 @@
+
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.php
+    container_name: codeigniter_app
+    volumes:
+      - ./store:/var/www/html/codeigniter_project # Monta o seu projeto CodeIgniter na subpasta
+    working_dir: /var/www/html/codeigniter_project # Diretório de trabalho dentro da subpasta do projeto
+    environment:
+      CI_ENVIRONMENT: development
+      # Banco de dados MySQL
+      database.default.hostname: db
+      database.default.database: ${MYSQL_DATABASE:-ci4_db}
+      database.default.username: ${MYSQL_USER:-user}
+      database.default.password: ${MYSQL_PASSWORD:-password}
+      database.default.DBDriver: MySQLi
+      # Redis (para o cache do CodeIgniter)
+      cache.redis.host: redis
+      cache.redis.password: # nulo ou vazio se não houver senha
+      cache.redis.port: 6379
+      cache.redis.timeout: 0
+      cache.redis.database: 0 # Banco de dados Redis padrão
+      # Email (MailHog)
+      email.fromEmail: 'app@example.com'
+      email.fromName: 'codeigniter_project'
+      email.SMTPHost: mailhog
+      email.SMTPPort: 1025
+      email.SMTPUser: '' # MailHog não requer autenticação
+      email.SMTPPass: ''
+      email.protocol: smtp
+      email.mailType: html
+      email.charset: utf-8
+      email.SMTPCrypto: '' # Sem criptografia para MailHog
+    depends_on:
+      - db
+      - redis
+    networks:
+      - app_network
+
+  nginx:
+    image: nginx:alpine
+    container_name: codeigniter_nginx
+    ports:
+      - "${NGINX_HOST_PORT:-8080}:80" # Porta do host:Porta do contêiner
+    volumes:
+      - ./codeigniter_project:/var/www/html/codeigniter_project # Nginx também precisa de acesso à subpasta do projeto
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf # Configuração do Nginx
+    depends_on:
+      - app
+    networks:
+      - app_network
+
+  db:
+    image: mysql:8.0
+    container_name: codeigniter_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-ci4_db}
+      MYSQL_USER: ${MYSQL_USER:-user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-password}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+    ports:
+      - "${MYSQL_HOST_PORT:-33061}:3306" # Porta do host:Porta do contêiner
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app_network
+
+  redis:
+    image: redis:alpine
+    container_name: codeigniter_redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_HOST_PORT:-63791}:6379" # Porta do host:Porta do contêiner
+    volumes:
+      - redis_data:/data
+    networks:
+      - app_network
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: codeigniter_mailhog
+    ports:
+      - "1025:1025" # Porta SMTP
+      - "8025:8025" # Porta da interface web
+    networks:
+      - app_network
+
+  redis-commander:
+    container_name: codeigniter_redis_commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: unless-stopped
+    environment:
+      - REDIS_HOSTS=local:redis:6379 # Conecta ao seu serviço 'redis' na porta 6379 (interna do Docker)
+    ports:
+      - "8081:8081" # Porta do host para acessar o Redis Commander : Porta interna do Redis Commander
+    networks:
+      - app_network
+
+volumes:
+  mysql_data:
+  redis_data:
+
+networks:
+  app_network:
+    driver: bridge

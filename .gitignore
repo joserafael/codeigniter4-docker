@@ -1,0 +1,93 @@
+#-------------------------
+# Arquivos Indesejados Específicos do Sistema Operacional
+#-------------------------
+
+# OS X
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# OS X Miniaturas
+._*
+
+# Caches de arquivos de imagem do Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Lixeira usada em compartilhamentos de arquivos
+$RECYCLE.BIN/
+
+# Arquivos do Windows Installer
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Atalhos do Windows
+*.lnk
+
+# Linux
+*~
+
+# Preferências de diretório do KDE
+.directory
+
+# Pasta da lixeira do Linux que pode aparecer em qualquer partição ou disco
+.Trash-*
+
+#-------------------------
+# Arquivos de Ambiente
+#-------------------------
+# Estes nunca devem estar sob controle de versão,
+# pois representam um risco de segurança.
+.env
+.vagrant
+Vagrantfile
+
+#-------------------------
+# Arquivos Temporários
+#-------------------------
+writable/cache/*
+!writable/cache/index.html
+
+writable/logs/*
+!writable/logs/index.html
+
+writable/session/*
+!writable/session/index.html
+
+writable/uploads/*
+!writable/uploads/index.html
+
+writable/debugbar/*
+!writable/debugbar/.gitkeep
+
+php_errors.log
+
+#-------------------------
+# Arquivos de Teste
+#-------------------------
+tests/coverage*
+
+# Não salve o phpunit sob controle de versão.
+phpunit
+results/
+phpunit*.xml
+
+#-------------------------
+# Composer
+#-------------------------
+vendor/
+
+#-------------------------
+# Arquivos de IDE / Desenvolvimento
+#-------------------------
+.php-version
+
+# Editores Jetbrains (PHPStorm, etc)
+.idea/
+*.iml
+
+# Visual Studio Code
+.vscode/
