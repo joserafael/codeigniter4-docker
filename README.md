@@ -18,7 +18,7 @@ Antes de começar, certifique-se de ter os seguintes softwares instalados em sua
 
 *   Docker
 *   Docker Compose
-*   Composer (necessário para executar o script `setup_project.sh`)
+*   Composer (necessário para executar o script `setup.sh`)
 *   Composer (necessário para executar o script `setup.sh`)
 
 ## Como Usar
@@ -49,7 +49,7 @@ O script irá:
 
 ### 3. Configurar o Arquivo `.env` do CodeIgniter
 
-Após o script `setup_project.sh` criar seu projeto (ex: na pasta `meu_app_ci`), navegue até essa pasta:
+Após o script `setup.sh` criar seu projeto (ex: na pasta `meu_app_ci`), navegue até essa pasta:
 ```bash
 cd nome_do_seu_projeto # Ex: cd meu_app_ci
 ```
@@ -114,9 +114,9 @@ docker-compose down -v
 *   `Dockerfile.php`: Define a imagem Docker para a aplicação PHP/CodeIgniter.
 *   `docker-compose.yml`: Orquestra todos os serviços Docker.
 *   `docker/`: Contém configurações específicas dos serviços Docker (ex: Nginx).
-*   `setup_project.sh`: Script para inicializar um novo projeto CodeIgniter.
+*   `setup.sh`: Script para inicializar um novo projeto CodeIgniter.
 *   `.gitignore`: Arquivo para ignorar arquivos e pastas do controle de versão.
-*   `NOME_DO_SEU_PROJETO/`: Pasta criada pelo `setup_project.sh` contendo sua aplicação CodeIgniter.
+*   `NOME_DO_SEU_PROJETO/`: Pasta criada pelo `setup.sh` contendo sua aplicação CodeIgniter.
 
 ## Contribuindo
 
