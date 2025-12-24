@@ -88,10 +88,26 @@ else
   exit 1
 fi
 
+
 echo ""
 echo "Configuration complete!"
 echo "Your CodeIgniter project is ready in folder: $PROJECT_NAME"
 echo "Files '$DOCKER_COMPOSE_FILE' and '$NGINX_CONF_FILE' were updated."
+
+# --- Ask if user wants to delete .git ---
+read -p "Do you want to delete the .git directory? (y/n): " DELETE_GIT
+if [[ "$DELETE_GIT" =~ ^[Yy]$ ]]; then
+  if [ -d ".git" ]; then
+    echo "Deleting .git directory..."
+    rm -rf .git
+    echo ".git directory deleted."
+  else
+    echo ".git directory not found."
+  fi
+else
+  echo ".git directory kept."
+fi
+
 echo "Now you can run 'docker-compose up -d --build' to start your Docker environment."
 
 exit 0
