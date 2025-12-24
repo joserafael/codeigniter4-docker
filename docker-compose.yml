@@ -7,33 +7,33 @@ services:
       dockerfile: Dockerfile.php
     container_name: codeigniter_app
     volumes:
-      - ./codeigniter_project:/var/www/html/codeigniter_project # Monta o seu projeto CodeIgniter na subpasta
-    working_dir: /var/www/html/codeigniter_project # Diretório de trabalho dentro da subpasta do projeto
+      - ./codeigniter_project:/var/www/html/codeigniter_project # Mounts your CodeIgniter project in the subfolder
+    working_dir: /var/www/html/codeigniter_project # Working directory inside the project subfolder
     environment:
       CI_ENVIRONMENT: development
-      # Banco de dados MySQL
+      # MySQL Database
       database.default.hostname: db
       database.default.database: ${MYSQL_DATABASE:-ci4_db}
       database.default.username: ${MYSQL_USER:-user}
       database.default.password: ${MYSQL_PASSWORD:-password}
       database.default.DBDriver: MySQLi
-      # Redis (para o cache do CodeIgniter)
+      # Redis (for CodeIgniter cache)
       cache.redis.host: redis
-      cache.redis.password: # nulo ou vazio se não houver senha
+      cache.redis.password: # null or empty if no password
       cache.redis.port: 6379
       cache.redis.timeout: 0
-      cache.redis.database: 0 # Banco de dados Redis padrão
+      cache.redis.database: 0 # Default Redis database
       # Email (MailHog)
       email.fromEmail: 'app@example.com'
       email.fromName: 'codeigniter_project'
       email.SMTPHost: mailhog
       email.SMTPPort: 1025
-      email.SMTPUser: '' # MailHog não requer autenticação
+      email.SMTPUser: '' # MailHog does not require authentication
       email.SMTPPass: ''
       email.protocol: smtp
       email.mailType: html
       email.charset: utf-8
-      email.SMTPCrypto: '' # Sem criptografia para MailHog
+      email.SMTPCrypto: '' # No encryption for MailHog
     depends_on:
       - db
       - redis
@@ -44,10 +44,10 @@ services:
     image: nginx:alpine
     container_name: codeigniter_nginx
     ports:
-      - "${NGINX_HOST_PORT:-8080}:80" # Porta do host:Porta do contêiner
+      - "${NGINX_HOST_PORT:-8080}:80" # Host port:Container port
     volumes:
-      - ./codeigniter_project:/var/www/html/codeigniter_project # Nginx também precisa de acesso à subpasta do projeto
-      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf # Configuração do Nginx
+      - ./codeigniter_project:/var/www/html/codeigniter_project # Nginx also needs access to the project subfolder
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf # Nginx configuration
     depends_on:
       - app
     networks:
@@ -63,7 +63,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-password}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
     ports:
-      - "${MYSQL_HOST_PORT:-33061}:3306" # Porta do host:Porta do contêiner
+      - "${MYSQL_HOST_PORT:-33061}:3306" # Host port:Container port
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -74,7 +74,7 @@ services:
     container_name: codeigniter_redis
     restart: unless-stopped
     ports:
-      - "${REDIS_HOST_PORT:-63791}:6379" # Porta do host:Porta do contêiner
+      - "${REDIS_HOST_PORT:-63791}:6379" # Host port:Container port
     volumes:
       - redis_data:/data
     networks:
@@ -84,8 +84,8 @@ services:
     image: mailhog/mailhog
     container_name: codeigniter_mailhog
     ports:
-      - "1025:1025" # Porta SMTP
-      - "8025:8025" # Porta da interface web
+      - "1025:1025" # SMTP Port
+      - "8025:8025" # Web Interface Port
     networks:
       - app_network
 
@@ -95,9 +95,9 @@ services:
     image: rediscommander/redis-commander:latest
     restart: unless-stopped
     environment:
-      - REDIS_HOSTS=local:redis:6379 # Conecta ao seu serviço 'redis' na porta 6379 (interna do Docker)
+      - REDIS_HOSTS=local:redis:6379 # Connects to your 'redis' service on port 6379 (Docker internal)
     ports:
-      - "8081:8081" # Porta do host para acessar o Redis Commander : Porta interna do Redis Commander
+      - "8081:8081" # Host port to access Redis Commander : Redis Commander internal port
     networks:
       - app_network
 

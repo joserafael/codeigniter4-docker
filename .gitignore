@@ -1,5 +1,5 @@
 #-------------------------
-# Arquivos Indesejados Específicos do Sistema Operacional
+# Operating System Specific Unwanted Files
 #-------------------------
 
 # OS X
@@ -7,46 +7,46 @@
 .AppleDouble
 .LSOverride
 
-# OS X Miniaturas
+# OS X Thumbnails
 ._*
 
-# Caches de arquivos de imagem do Windows
+# Windows Image File Caches
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 
-# Lixeira usada em compartilhamentos de arquivos
+# Recycle Bin used on file shares
 $RECYCLE.BIN/
 
-# Arquivos do Windows Installer
+# Windows Installer Files
 *.cab
 *.msi
 *.msm
 *.msp
 
-# Atalhos do Windows
+# Windows Shortcuts
 *.lnk
 
 # Linux
 *~
 
-# Preferências de diretório do KDE
+# KDE Directory Preferences
 .directory
 
-# Pasta da lixeira do Linux que pode aparecer em qualquer partição ou disco
+# Linux trash folder which might appear on any partition or disk
 .Trash-*
 
 #-------------------------
-# Arquivos de Ambiente
+# Environment Files
 #-------------------------
-# Estes nunca devem estar sob controle de versão,
-# pois representam um risco de segurança.
+# These should never be under version control,
+# as they pose a security risk.
 .env
 .vagrant
 Vagrantfile
 
 #-------------------------
-# Arquivos Temporários
+# Temporary Files
 #-------------------------
 writable/cache/*
 !writable/cache/index.html
@@ -66,11 +66,11 @@ writable/debugbar/*
 php_errors.log
 
 #-------------------------
-# Arquivos de Teste
+# Test Files
 #-------------------------
 tests/coverage*
 
-# Não salve o phpunit sob controle de versão.
+# Do not save phpunit under version control.
 phpunit
 results/
 phpunit*.xml
@@ -81,11 +81,11 @@ phpunit*.xml
 vendor/
 
 #-------------------------
-# Arquivos de IDE / Desenvolvimento
+# IDE / Development Files
 #-------------------------
 .php-version
 
-# Editores Jetbrains (PHPStorm, etc)
+# Jetbrains Editors (PHPStorm, etc)
 .idea/
 *.iml
 

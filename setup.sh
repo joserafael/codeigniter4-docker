@@ -1,97 +1,97 @@
 #!/bin/bash
 
-# Script para configurar um novo projeto CodeIgniter 4 com Docker.
+# Script to configure a new CodeIgniter 4 project with Docker.
 
-# Caminhos para os arquivos de configuração
+# Paths for configuration files
 DOCKER_COMPOSE_FILE="docker-compose.yml"
 NGINX_CONF_FILE="docker/nginx/default.conf"
 
-# Placeholder atual nos arquivos de configuração que será substituído.
-# Certifique-se de que seus arquivos modelo usem este placeholder.
+# Current placeholder in configuration files that will be replaced.
+# Make sure your template files use this placeholder.
 PLACEHOLDER_PROJECT_NAME="codeigniter_project"
 
-# --- Solicitar nome do projeto ao usuário ---
-read -p "Digite o nome para o seu projeto CodeIgniter (ex: meu_app_ci): " PROJECT_NAME
+# --- Request project name from user ---
+read -p "Enter the name for your CodeIgniter project (ex: my_ci_app): " PROJECT_NAME
 
-# Validar que o nome do projeto não esteja vazio
+# Validate that the project name is not empty
 if [ -z "$PROJECT_NAME" ]; then
-  echo "Erro: O nome do projeto não pode estar vazio. Abortando."
+  echo "Error: Project name cannot be empty. Aborting."
   exit 1
 fi
 
-# Validar caracteres permitidos para o nome do diretório (simplificado)
+# Validate allowed characters for directory name (simplified)
 if [[ "$PROJECT_NAME" =~ [^a-zA-Z0-9_-] ]]; then
-  echo "Erro: O nome do projeto só pode conter letras, números, underscores (_) e hífens (-). Abortando."
+  echo "Error: Project name can only contain letters, numbers, underscores (_) and hyphens (-). Aborting."
   exit 1
 fi
 
-# Verificar se o diretório do projeto já existe
+# Check if project directory already exists
 if [ -d "$PROJECT_NAME" ]; then
-  echo "Erro: O diretório '$PROJECT_NAME' já existe. Por favor, escolha outro nome ou remova o diretório existente. Abortando."
+  echo "Error: Directory '$PROJECT_NAME' already exists. Please choose another name or remove the existing directory. Aborting."
   exit 1
 fi
 
-# --- Criar projeto CodeIgniter ---
-echo "Criando o projeto CodeIgniter '$PROJECT_NAME'..."
+# --- Create CodeIgniter project ---
+echo "Creating CodeIgniter project '$PROJECT_NAME'..."
 if ! composer create-project codeigniter4/appstarter "$PROJECT_NAME" --prefer-dist --no-interaction; then
-  echo "Erro: Falha ao criar o projeto CodeIgniter com o Composer. Abortando."
-  # Tenta limpar a pasta criada se o Composer falhar
+  echo "Error: Failed to create CodeIgniter project with Composer. Aborting."
+  # Try to clean up created folder if Composer fails
   if [ -d "$PROJECT_NAME" ]; then
     rm -rf "$PROJECT_NAME"
   fi
   exit 1
 fi
-echo "Projeto CodeIgniter '$PROJECT_NAME' criado com sucesso na pasta './$PROJECT_NAME'."
+echo "CodeIgniter project '$PROJECT_NAME' created successfully in folder './$PROJECT_NAME'."
 
-echo "Atualizando arquivos de configuração para usar '$PROJECT_NAME'..."
+echo "Updating configuration files to use '$PROJECT_NAME'..."
 
-# --- Actualizar docker-compose.yml ---
-# Usa-se # como delimitador para o sed para evitar conflitos com as barras / nos caminhos.
-# Cria-se um arquivo .bak como cópia de segurança.
+# --- Update docker-compose.yml ---
+# Uses # as delimiter for sed to avoid conflicts with slashes / in paths.
+# Creates a .bak file as backup.
 if sed -i.bak \
     -e "s#\./${PLACEHOLDER_PROJECT_NAME}:/var/www/html/${PLACEHOLDER_PROJECT_NAME}#\./${PROJECT_NAME}:/var/www/html/${PROJECT_NAME}#g" \
     -e "s#working_dir: /var/www/html/${PLACEHOLDER_PROJECT_NAME}#working_dir: /var/www/html/${PROJECT_NAME}#g" \
     "$DOCKER_COMPOSE_FILE"; then
-  echo "Arquivo '$DOCKER_COMPOSE_FILE' atualizado."
-  rm -f "${DOCKER_COMPOSE_FILE}.bak" # Remover backup se o sed teve êxito
+  echo "File '$DOCKER_COMPOSE_FILE' updated."
+  rm -f "${DOCKER_COMPOSE_FILE}.bak" # Remove backup if sed succeeded
 else
-  echo "Erro: Falha ao atualizar '$DOCKER_COMPOSE_FILE'."
+  echo "Error: Failed to update '$DOCKER_COMPOSE_FILE'."
   if [ -f "${DOCKER_COMPOSE_FILE}.bak" ]; then
-    echo "Restaurando '$DOCKER_COMPOSE_FILE' a partir de '${DOCKER_COMPOSE_FILE}.bak'..."
+    echo "Restoring '$DOCKER_COMPOSE_FILE' from '${DOCKER_COMPOSE_FILE}.bak'..."
     if mv "${DOCKER_COMPOSE_FILE}.bak" "$DOCKER_COMPOSE_FILE"; then
-      echo "'$DOCKER_COMPOSE_FILE' restaurado com sucesso."
+      echo "'$DOCKER_COMPOSE_FILE' restored successfully."
     else
-      echo "Erro crítico: Falha ao restaurar '$DOCKER_COMPOSE_FILE' a partir de '${DOCKER_COMPOSE_FILE}.bak'. Por favor, verifique manualmente."
+      echo "Critical error: Failed to restore '$DOCKER_COMPOSE_FILE' from '${DOCKER_COMPOSE_FILE}.bak'. Please check manually."
     fi
   else
-    echo "Não foi encontrado o arquivo de backup '${DOCKER_COMPOSE_FILE}.bak'. Não foi possível restaurar."
+    echo "Backup file '${DOCKER_COMPOSE_FILE}.bak' not found. Could not restore."
   fi
   exit 1
 fi
 
-# --- Actualizar docker/nginx/default.conf ---
+# --- Update docker/nginx/default.conf ---
 if sed -i.bak "s#root /var/www/html/${PLACEHOLDER_PROJECT_NAME}/public;#root /var/www/html/${PROJECT_NAME}/public;#g" "$NGINX_CONF_FILE"; then
-  echo "Arquivo '$NGINX_CONF_FILE' atualizado."
-  rm -f "${NGINX_CONF_FILE}.bak" # Remover backup se o sed teve êxito
+  echo "File '$NGINX_CONF_FILE' updated."
+  rm -f "${NGINX_CONF_FILE}.bak" # Remove backup if sed succeeded
 else
-  echo "Erro: Falha ao atualizar '$NGINX_CONF_FILE'."
+  echo "Error: Failed to update '$NGINX_CONF_FILE'."
   if [ -f "${NGINX_CONF_FILE}.bak" ]; then
-    echo "Restaurando '$NGINX_CONF_FILE' a partir de '${NGINX_CONF_FILE}.bak'..."
+    echo "Restoring '$NGINX_CONF_FILE' from '${NGINX_CONF_FILE}.bak'..."
     if mv "${NGINX_CONF_FILE}.bak" "$NGINX_CONF_FILE"; then
-      echo "'$NGINX_CONF_FILE' restaurado com sucesso."
+      echo "'$NGINX_CONF_FILE' restored successfully."
     else
-      echo "Erro crítico: Falha ao restaurar '$NGINX_CONF_FILE' a partir de '${NGINX_CONF_FILE}.bak'. Por favor, verifique manualmente."
+      echo "Critical error: Failed to restore '$NGINX_CONF_FILE' from '${NGINX_CONF_FILE}.bak'. Please check manually."
     fi
   else
-    echo "Não foi encontrado o arquivo de backup '${NGINX_CONF_FILE}.bak'. Não foi possível restaurar."
+    echo "Backup file '${NGINX_CONF_FILE}.bak' not found. Could not restore."
   fi
   exit 1
 fi
 
 echo ""
-echo "Configuração concluída!"
-echo "Seu projeto CodeIgniter está pronto na pasta: $PROJECT_NAME"
-echo "Os arquivos '$DOCKER_COMPOSE_FILE' e '$NGINX_CONF_FILE' foram atualizados."
-echo "Agora você pode executar 'docker-compose up -d --build' para iniciar seu ambiente Docker."
+echo "Configuration complete!"
+echo "Your CodeIgniter project is ready in folder: $PROJECT_NAME"
+echo "Files '$DOCKER_COMPOSE_FILE' and '$NGINX_CONF_FILE' were updated."
+echo "Now you can run 'docker-compose up -d --build' to start your Docker environment."
 
 exit 0
