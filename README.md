@@ -1,123 +1,122 @@
-# Ambiente de Desenvolvimento Docker para CodeIgniter 4
+# Docker Development Environment for CodeIgniter 4
 
-Este repositório fornece uma configuração Docker completa para desenvolver aplicações CodeIgniter 4. O ambiente inclui PHP, Nginx, MySQL, Redis, MailHog e Redis Commander.
+This repository provides a complete Docker configuration for developing CodeIgniter 4 applications. The environment includes PHP, Nginx, MySQL, Redis, MailHog, and Redis Commander.
 
-## Funcionalidades
+## Features
 
 *   **PHP 8.2-FPM**
-*   **Nginx** como servidor web.
-*   **MySQL 8.0** como banco de dados.
-*   **Redis** para cache ou sessões.
-*   **MailHog** para capturar e visualizar e-mails enviados pela aplicação.
-*   **Redis Commander** para visualizar e gerenciar dados no Redis.
-*   **Script de Configuração (`setup.sh`)** para criar um novo projeto CodeIgniter 4 e configurar automaticamente os arquivos Docker.
+*   **Nginx** as web server.
+*   **MySQL 8.0** as database.
+*   **Redis** for cache or sessions.
+*   **MailHog** to capture and view emails sent by the application.
+*   **Redis Commander** to view and manage data in Redis.
+*   **Setup Script (`setup.sh`)** to create a new CodeIgniter 4 project and automatically configure Docker files.
 
-## Pré-requisitos
+## Prerequisites
 
-Antes de começar, certifique-se de ter os seguintes softwares instalados em sua máquina:
+Before starting, make sure you have the following software installed on your machine:
 
 *   Docker
 *   Docker Compose
-*   Composer (necessário para executar o script `setup.sh`)
-*   Composer (necessário para executar o script `setup.sh`)
+*   Composer (required to run the `setup.sh` script)
 
-## Como Usar
+## How to Use
 
-### 1. Clonar o Repositório (Opcional)
+### 1. Clone the Repository (Optional)
 
-Se você ainda não tem este setup localmente:
+If you don't have this setup locally yet:
 ```bash
 git clone https://github.com/joserafael/codeigniter4-docker.git
 cd codeigniter4-docker
 ```
 
-### 2. Configurar um Novo Projeto CodeIgniter
+### 2. Configure a New CodeIgniter Project
 
-Este repositório inclui um script `setup.sh` para facilitar a criação de um novo projeto CodeIgniter 4 e a configuração dos arquivos Docker.
+This repository includes a `setup.sh` script to facilitate creating a new CodeIgniter 4 project and configuring Docker files.
 
-Execute o script e siga as instruções:
+Run the script and follow the instructions:
 ```bash
 chmod +x setup.sh
 ./setup.sh
 ```
-O script irá:
-1.  Solicitar um nome para o seu novo projeto CodeIgniter (ex: `meu_app_ci`).
-2.  Criar uma nova pasta com o nome fornecido e instalar o CodeIgniter 4 nela usando `composer create-project`.
-3.  Atualizar automaticamente os arquivos `docker-compose.yml` e `docker/nginx/default.conf` para usar o nome do projeto que você forneceu.
+The script will:
+1.  Request a name for your new CodeIgniter project (e.g., `my_app_ci`).
+2.  Create a new folder with the provided name and install CodeIgniter 4 in it using `composer create-project`.
+3.  Automatically update `docker-compose.yml` and `docker/nginx/default.conf` files to use the project name you provided.
 
-**Nota:** O script assume que os arquivos `docker-compose.yml` e `docker/nginx/default.conf` inicialmente usam `codeigniter_project` como placeholder para o nome do diretório do projeto.
+**Note:** The script assumes that `docker-compose.yml` and `docker/nginx/default.conf` files initially use `codeigniter_project` as a placeholder for the project directory name.
 
-### 3. Configurar o Arquivo `.env` do CodeIgniter
+### 3. Configure the CodeIgniter `.env` File
 
-Após o script `setup.sh` criar seu projeto (ex: na pasta `meu_app_ci`), navegue até essa pasta:
+After the `setup.sh` script creates your project (e.g., in the `my_app_ci` folder), navigate to that folder:
 ```bash
-cd nome_do_seu_projeto # Ex: cd meu_app_ci
+cd your_project_name # Ex: cd my_app_ci
 ```
-Copie o arquivo `env` para `.env` e configure as variáveis de ambiente da sua aplicação, especialmente as de banco de dados se forem diferentes dos padrões definidos no `docker-compose.yml`.
+Copy the `env` file to `.env` and configure your application's environment variables, especially the database ones if they are different from the defaults defined in `docker-compose.yml`.
 ```bash
 cp env .env
 ```
-As configurações de banco de dados, Redis e e-mail no `docker-compose.yml` (seção `environment` do serviço `app`) são passadas para o CodeIgniter e geralmente sobrescrevem os valores do `.env`.
+The database, Redis, and email settings in `docker-compose.yml` (`environment` section of the `app` service) are passed to CodeIgniter and generally override the values in `.env`.
 
-### 4. Iniciar o Ambiente Docker
+### 4. Start the Docker Environment
 
-Volte para a raiz do repositório do Docker (onde está o `docker-compose.yml`) e execute:
+Go back to the root of the Docker repository (where `docker-compose.yml` is) and run:
 ```bash
 docker-compose up -d --build
 ```
-Este comando irá construir as imagens (na primeira vez ou se o `Dockerfile.php` mudar) e iniciar todos os serviços em segundo plano.
+This command will build the images (the first time or if `Dockerfile.php` changes) and start all services in the background.
 
-### 5. Acessar os Serviços
+### 5. Access the Services
 
-*   **Sua Aplicação CodeIgniter**: `http://localhost:8080` (ou a porta configurada em `NGINX_HOST_PORT` no `docker-compose.yml`).
-*   **MailHog (Interface Web para E-mails)**: `http://localhost:8025`
+*   **Your CodeIgniter Application**: `http://localhost:8080` (or the port configured in `NGINX_HOST_PORT` in `docker-compose.yml`).
+*   **MailHog (Web Interface for Emails)**: `http://localhost:8025`
 *   **Redis Commander**: `http://localhost:8081`
 *   **MySQL**:
-    *   Host (para clientes externos como DBeaver, TablePlus): `127.0.0.1`
-    *   Porta: `33061` (ou a porta configurada em `MYSQL_HOST_PORT`)
-    *   Usuário: `user` (ou o valor de `MYSQL_USER`)
-    *   Senha: `password` (o valor de `MYSQL_PASSWORD`)
-    *   Banco de Dados: `ci4_db` (o valor de `MYSQL_DATABASE`)
+    *   Host (for external clients like DBeaver, TablePlus): `127.0.0.1`
+    *   Port: `33061` (or the port configured in `MYSQL_HOST_PORT`)
+    *   User: `user` (or the value of `MYSQL_USER`)
+    *   Password: `password` (the value of `MYSQL_PASSWORD`)
+    *   Database: `ci4_db` (the value of `MYSQL_DATABASE`)
 *   **Redis**:
-    *   Host (para clientes externos): `127.0.0.1`
-    *   Porta: `63791` (ou a porta configurada em `REDIS_HOST_PORT`)
+    *   Host (for external clients): `127.0.0.1`
+    *   Port: `63791` (or the port configured in `REDIS_HOST_PORT`)
 
-### 6. Executar Comandos Composer e Spark
+### 6. Run Composer and Spark Commands
 
-Para executar comandos Composer (como `install`, `update`, `require`) ou comandos `php spark` do CodeIgniter, você deve fazê-lo dentro do contêiner `app`:
+To run Composer commands (like `install`, `update`, `require`) or CodeIgniter `php spark` commands, you must do so inside the `app` container:
 
 ```bash
-# Exemplo para instalar dependências do Composer
+# Example to install Composer dependencies
 docker-compose exec app composer install
 
-# Exemplo para executar migrações do CodeIgniter
+# Example to run CodeIgniter migrations
 docker-compose exec app php spark migrate
 
-# Exemplo para instalar um novo pacote
-docker-compose exec app composer require vendor/pacote
+# Example to install a new package
+docker-compose exec app composer require vendor/package
 ```
-O diretório de trabalho padrão dentro do contêiner `app` já é a raiz do seu projeto CodeIgniter.
+The default working directory inside the `app` container is already the root of your CodeIgniter project.
 
-### 7. Parar o Ambiente Docker
+### 7. Stop the Docker Environment
 
-Para parar todos os contêineres:
+To stop all containers:
 ```bash
 docker-compose down
 ```
-Se você quiser remover os volumes (e perder os dados do MySQL e Redis):
+If you want to remove volumes (and lose MySQL and Redis data):
 ```bash
 docker-compose down -v
 ```
 
-## Estrutura do Projeto
+## Project Structure
 
-*   `Dockerfile.php`: Define a imagem Docker para a aplicação PHP/CodeIgniter.
-*   `docker-compose.yml`: Orquestra todos os serviços Docker.
-*   `docker/`: Contém configurações específicas dos serviços Docker (ex: Nginx).
-*   `setup.sh`: Script para inicializar um novo projeto CodeIgniter.
-*   `.gitignore`: Arquivo para ignorar arquivos e pastas do controle de versão.
-*   `NOME_DO_SEU_PROJETO/`: Pasta criada pelo `setup.sh` contendo sua aplicação CodeIgniter.
+*   `Dockerfile.php`: Defines the Docker image for the PHP/CodeIgniter application.
+*   `docker-compose.yml`: Orchestrates all Docker services.
+*   `docker/`: Contains specific Docker service configurations (e.g., Nginx).
+*   `setup.sh`: Script to initialize a new CodeIgniter project.
+*   `.gitignore`: File to ignore files and folders from version control.
+*   `YOUR_PROJECT_NAME/`: Folder created by `setup.sh` containing your CodeIgniter application.
 
-## Contribuindo
+## Contributing
 
-Sinta-se à vontade para abrir issues ou pull requests para melhorias.
+Feel free to open issues or pull requests for improvements.
