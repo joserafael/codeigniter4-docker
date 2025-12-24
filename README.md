@@ -4,7 +4,7 @@ This repository provides a complete Docker configuration for developing CodeIgni
 
 ## Features
 
-*   **PHP 8.2-FPM**
+*   **PHP 8.3-FPM**
 *   **Nginx** as web server.
 *   **MySQL 8.0** as database.
 *   **Redis** for cache or sessions.

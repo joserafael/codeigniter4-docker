@@ -4,7 +4,7 @@ Este repositório fornece uma configuração Docker completa para desenvolver ap
 
 ## Funcionalidades
 
-*   **PHP 8.2-FPM**
+*   **PHP 8.3-FPM**
 *   **Nginx** como servidor web.
 *   **MySQL 8.0** como banco de dados.
 *   **Redis** para cache ou sessões.
