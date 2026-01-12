@@ -27,7 +27,10 @@ Before starting, make sure you have the following software installed on your mac
 If you don't have this setup locally yet:
 ```bash
 git clone https://github.com/joserafael/codeigniter4-docker.git
-cd codeigniter4-docker
+# or clone into a specific folder
+git clone https://github.com/joserafael/codeigniter4-docker.git new_project_name
+
+cd codeigniter4-docker # or cd new_project_name
 ```
 
 ### 2. Configure a New CodeIgniter Project

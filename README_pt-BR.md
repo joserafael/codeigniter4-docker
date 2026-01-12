@@ -28,7 +28,10 @@ Antes de começar, certifique-se de ter os seguintes softwares instalados em sua
 Se você ainda não tem este setup localmente:
 ```bash
 git clone https://github.com/joserafael/codeigniter4-docker.git
-cd codeigniter4-docker
+# ou clone em uma pasta específica
+git clone https://github.com/joserafael/codeigniter4-docker.git novo_nome_do_projeto
+
+cd codeigniter4-docker # ou cd novo_nome_do_projeto
 ```
 
 ### 2. Configurar um Novo Projeto CodeIgniter
