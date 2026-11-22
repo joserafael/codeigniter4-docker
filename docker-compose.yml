@@ -35,8 +35,10 @@ services:
       email.charset: utf-8
       email.SMTPCrypto: '' # No encryption for MailHog
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     networks:
       - app_network
 
@@ -63,7 +65,13 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD:-password}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
     ports:
-      - "${MYSQL_HOST_PORT:-33061}:3306" # Host port:Container port
+      - "127.0.0.1:${MYSQL_HOST_PORT:-33061}:3306" # Host port:Container port
+    healthcheck:
+      test: ["CMD-SHELL", "MYSQL_PWD=\"$$MYSQL_ROOT_PASSWORD\" mysqladmin ping -h 127.0.0.1 -u root --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -74,7 +82,7 @@ services:
     container_name: codeigniter_redis
     restart: unless-stopped
     ports:
-      - "${REDIS_HOST_PORT:-63791}:6379" # Host port:Container port
+      - "127.0.0.1:${REDIS_HOST_PORT:-63791}:6379" # Host port:Container port
     volumes:
       - redis_data:/data
     networks:
